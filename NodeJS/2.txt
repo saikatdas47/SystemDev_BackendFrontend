@@ -1,0 +1,99 @@
+# Module and Package Overview
+
+## Module
+A module in Node.js is a reusable block of code whose existence does not accidentally impact other code. 
+You can write your own modules and use them in various applications. Node.js has a set of built-in modules 
+which you can use without any further installation.
+
+In this example, `math.js` is a module that exports mathematical utility functions (`add` and `subtract`). 
+Other files can import and use these functions.
+
+## Package
+A package is a directory with one or more modules inside it and a `package.json` file that metadata about the package. 
+A package can contain one module or multiple modules. When you install a package from npm (Node Package Manager), 
+you're installing a package that contains one or more modules.
+
+## Documentation for math.js Module
+
+
+
+
+
+
+
+
+/**
+ * File System Operations - Synchronous vs Asynchronous
+ * 
+ * This module demonstrates the difference between blocking and non-blocking file operations in Node.js
+ * 
+ * BLOCKING EXECUTION (Synchronous):
+ * - The program pauses and waits for the operation to complete before moving to the next line
+ * - Subsequent code cannot execute until the file operation finishes
+ * - Simple but can cause performance issues with large files or frequent operations
+ * - Methods: writeFileSync(), readFileSync()
+ * 
+ * NON-BLOCKING EXECUTION (Asynchronous):
+ * - The program registers a callback function and continues executing other code immediately
+ * - The file operation happens in the background
+ * - When the operation completes, the callback function is invoked with results or errors
+ * - Better for performance and user experience, especially in server applications
+ * - Methods: writeFile(), readFile()
+ * 
+ * @requires fs - Node.js file system module
+ * 
+ * @example
+ * // Synchronous: blocks until file is written
+ * fs.writeFileSync('./example.txt', 'content');
+ * console.log('This prints after file is written');
+ * 
+ * @example
+ * // Asynchronous: continues execution while file is being written
+ * fs.writeFile('./example.txt', 'content', (err) => {
+ *     if (err) throw err;
+ *     console.log('File written');
+ * });
+ * console.log('This prints immediately, before file is written');
+ */
+const fs = require('fs');
+
+// SYNCHRONOUS WRITE - blocks execution
+fs.writeFileSync('./example.txt', 'This is an example file.');
+console.log('File written (sync)');
+
+// ASYNCHRONOUS WRITE - non-blocking
+fs.writeFile('./example2.txt', 'Updated async content', (err) => {
+    if (err) throw err;
+    console.log('File written (async)');
+});
+
+// SYNCHRONOUS READ - blocks execution
+const dataSynced = fs.readFileSync('./example.txt', 'utf8');
+console.log('Sync read:', dataSynced);
+
+// ASYNCHRONOUS READ - non-blocking
+fs.readFile('./example2.txt', 'utf8', (err, data) => {
+    if (err) throw err;
+    console.log('Async read:', data);
+});
+
+console.log('File created successfully.');
+
+
+ * - Delete a file synchronously:
+ *   fs.unlinkSync("fileNameWithPath");
+ * 
+ * - Get info of a file synchronously:
+ *   fs.statSync("fileNameWithPath");
+ * 
+ * - Check if path is a file:
+ *   fs.statSync("fileNameWithPath").isFile();
+ * 
+ * - Create a single folder synchronously:
+ *   fs.mkdirSync("./newfolder");
+ * 
+ * - Create multiple nested folders recursively:
+ *   fs.mkdirSync("./newfolder/a/b", { recursive: true });
+ * 
+ * (These are notes for future reference)
+ 

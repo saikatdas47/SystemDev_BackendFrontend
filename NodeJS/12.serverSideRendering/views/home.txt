@@ -1,0 +1,73 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the Home Page</h1>
+
+    <h1>Url Shortner</h1>
+    <form method="POST" action="/url">
+        <input type="text" name="originalUrl" placeholder="Enter your URL">
+        <button type="submit">Generate Short URL</button>
+    </form>
+
+    <div>
+        <% if (locals.shortUrl) { %>
+            <p>Short URL: http://localhost:3000/url/<%= locals.shortUrl %>
+            </p>
+            <button
+                onclick="navigator.clipboard.writeText('http://localhost:3000/url/<%= locals.shortUrl %>')">Copy</button>
+            <% } %>
+    </div>
+
+    <div>
+        <% if (locals.urls) { %>
+
+
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Short URL</th>
+                        <th>Original URL</th>
+                        <th>Visits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% urls.forEach(url=> { %>
+                        <tr>
+                            <td>
+                                <a href="http://localhost:3000/url/<%= url.shortUrl %>" target="_blank"
+                                    rel="noopener noreferrer">
+                                    <%= url.shortUrl %>
+                                </a>
+                            </td>
+                            <td>
+                                <%= url.originalUrl %>
+                            </td>
+                            <td>
+                                <%= url.visitHistory.length %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+
+            <% } %>
+    </div>
+
+
+
+</body>
+
+</html>

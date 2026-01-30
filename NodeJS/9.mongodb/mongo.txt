@@ -1,0 +1,7 @@
+Schema - Define the structure
+    schema -> Model
+    Using model we do CRUD operations
+
+
+
+mainly age ja json file r fs file e data store, read , write korsilam ta akhon database e korbo 

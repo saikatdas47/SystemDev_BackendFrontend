@@ -1,0 +1,132 @@
+MongoDB
+
+1. Introduction:
+- MongoDB is a NoSQL, document-oriented database.
+- Stores data in flexible, JSON-like documents (BSON format).
+- Schema-less: Documents in a collection can have different fields.
+
+2. Key Concepts:
+- Database: Container for collections.
+- Collection: Group of MongoDB documents, similar to a table in RDBMS.
+- Document: Basic unit of data, stored as key-value pairs.
+
+3. Features:
+- High performance, scalability, and flexibility.
+- Supports horizontal scaling via sharding.
+- Indexing for fast queries.
+- Aggregation framework for data processing.
+
+4. CRUD Operations:
+- Create: Insert documents into a collection.
+- Read: Query documents using find().
+- Update: Modify existing documents.
+- Delete: Remove documents from a collection.
+
+5. Data Types:
+- String, Number, Boolean, Array, Object, Date, Null, ObjectId, etc.
+
+6. Indexing:
+- Improves query performance.
+- Types: Single field, compound, text, geospatial, etc.
+
+7. Aggregation:
+- Used for data analysis and transformation.
+- Stages: $match, $group, $sort, $project, etc.
+
+8. Replication:
+- Provides data redundancy and high availability.
+- Replica set: Group of mongod processes maintaining the same data set.
+
+9. Sharding:
+- Distributes data across multiple servers.
+- Enables horizontal scaling for large datasets.
+
+10. Use Cases:
+- Big data applications, real-time analytics, content management, IoT, etc.
+
+11. Advantages:
+- Flexible schema, easy horizontal scaling, high availability.
+
+12. Disadvantages:
+- No support for complex joins, eventual consistency in some cases.
+
+13. Basic Commands:
+- show dbs: List databases
+- use <db>: Switch database
+- show collections: List collections
+- db.collection.find(): Query documents
+
+References:
+- https://www.mongodb.com/docs/
+
+
+__________________________MONGODB______________________________________
+
+Connecting NodeJS with MongoDB | Mongoose + Express note
+https://youtu.be/xrglM8U0Zv8?si=85NqgUuC4OAZ2s_0
+
+npm init -y
+npm install express mongoose //mongoose holo lib for nodejs jekhane mongodb use korte pari amra
+
+const mongoose = require("mongoose");
+mongoose
+  .connect("mongodb://127.0.0.1:27017/testdb")
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error(err));
+
+
+Create a Mongoose model (schema)
+Add below the MongoDB connection:
+const userSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const User = mongoose.model("User", userSchema);
+
+Schema = structure + rules
+Model = actual database interface
+
+
+Create routes (CRUD basics)
+Create (POST)
+app.post("/users", async (req, res) => {
+  const user = await User.create(req.body);
+  res.json(user);
+});
+
+Read (GET)
+app.get("/users", async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+});
+
+Update (PUT)
+app.delete("/users/:id", async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.send("User deleted");
+});
+
+Delete (DELETE)
+app.delete("/users/:id", async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.send("User deleted");
+});
+
+
+6. Test with curl / Postman
+Create user:
+curl -X POST http://localhost:3000/users \
+-H "Content-Type: application/json" \
+-d '{"name":"Saikat","age":24}'
+curl http://localhost:3000/users
+
+
+
+
+
+

@@ -1,0 +1,182 @@
+//architecture of Nodejs
+
+Blocking = synchronous = stops everything until done.
+Non-blocking = asynchronous = allows Node to continue executing while waiting.
+
+In traditional servers (like Apache), each client request can create a new thread, which may lead to high memory usage under heavy load. 
+Node.js uses a single-threaded event loop with non-blocking I/O, allowing it to handle many connections efficiently without creating a new 
+thread for each request.
+Blocking operations (like file system or CPU-intensive tasks) can tie up the Node.js thread pool, causing delays for other asynchronous 
+tasks. Avoid blocking the thread pool to maintain high concurrency.
+Best practice: Use non-blocking asynchronous code in Node.js to maximize performance and scalability.
+
+/*
+Example: Blocking (synchronous) file write
+*/
+const fs = require('fs');
+fs.writeFileSync('blocking.txt', 'This is a blocking write.');
+console.log('Blocking write complete.');
+
+/*
+Example: Non-blocking (asynchronous) file write
+*/
+fs.writeFile('nonblocking.txt', 'This is a non-blocking write.', (err) => {
+    if (err) throw err;
+    console.log('Non-blocking write complete.');
+});
+
+
+
+
+
+//Build a Http server
+
+const http = require('http');
+const fs = require('fs');
+
+const myserver = http.createServer((req, res) => {
+    const log = `${new Date().toISOString()} ${req.url} New Req Received\n.`;
+    fs.appendFile("log.txt", log, (err,data) => { // aikhane express use kora hoy. jeta pore shikbo
+        switch(req.url) {
+            case '/':
+                res.end('Welcome to the Home Page!');
+                break;
+            case '/about':
+                res.end('This is the About Page.');
+                break;
+            case '/home':
+                res.end('This is the Home Page.');
+                break;
+            default:
+                res.end('404 Not Found');
+        }
+       
+    });
+});
+
+//We use `req` (request) to access information about the incoming HTTP request, such as headers, URL, and method.- The HTTP request object representing the client's request.
+// We use `res` (response) to construct and send the HTTP response back to the client, including status code, headers, and body.The HTTP response object used to send a response back to the client.
+myserver.listen(3000, () => {
+    console.log('Server is listening on port 3000');
+});
+
+
+
+
+
+
+//URL
+
+/*
+A URL (Uniform Resource Locator) is the address used to access resources on the internet.
+
+Example URL:
+https://www.example.com:8080/path/to/page?search=nodejs&sort=asc#section2
+
+Breakdown:
+- Protocol:    https
+- Host:        www.example.com
+- Port:        8080
+- Path:        /path/to/page
+- Query:       ?search=nodejs&sort=asc
+- Fragment:    #section2
+
+Explanation:
+- Protocol: Specifies the communication method (http, https, ftp, etc.).
+- Host: The domain name or IP address of the server.
+- Port: Optional; specifies the port number (default for http is 80, https is 443).
+- Path: The specific resource or page on the server.
+- Query: Optional; key-value pairs for parameters, starts with '?'.
+- Fragment: Optional; points to a section within the page, starts with '#'.
+*/
+--------------------------------Code ----------------------
+const http = require('http');
+const fs = require('fs');
+
+const url = require('url');
+
+const myserver = http.createServer((req, res) => {
+
+    const log = `${new Date().toISOString()} ${req.url} New Req Received\n.`;
+    const parsedUrl = url.parse(req.url, true);
+    console.log('Parsed URL:', parsedUrl);
+
+    fs.appendFile("log.txt", log, (err, data) => { // aikhane express use kora hoy. jeta pore shikbo
+        switch (parsedUrl.pathname) {
+            case '/':
+                res.end('Welcome to the Home Page!');
+                break;
+            case '/about':
+                const username= parsedUrl.query.user || 'Guest';
+                const searchquery= parsedUrl.query.search || '';
+                res.end(`This is the About Page. Welcome, ${username}! Search Query: ${searchquery}`);
+                break;
+            case '/home':
+                res.end('This is the Home Page.');
+                break;
+            default:
+                res.end('404 Not Found');
+        }
+
+    });
+});
+
+//We use `req` (request) to access information about the incoming HTTP request, such as headers, URL, and method.- The HTTP request object representing the client's request.
+// We use `res` (response) to construct and send the HTTP response back to the client, including status code, headers, and body.The HTTP response object used to send a response back to the client.
+myserver.listen(3000, () => {
+    console.log('Server is listening on port 3000');
+});
+
+----------------------------------Terminal-----------------------
+
+saikatdas@Saikats-MacBook-Air urlServer % npm start
+
+> urlserver@1.0.0 start
+> node index.js
+
+Server is listening on port 3000
+Parsed URL: Url {
+  protocol: null,
+  slashes: null,
+  auth: null,
+  host: null,
+  port: null,
+  hostname: null,
+  hash: null,
+  search: '?user=saikat&search=dog',
+  query: [Object: null prototype] { user: 'saikat', search: 'dog' },
+  pathname: '/about',
+  path: '/about?user=saikat&search=dog',
+  href: '/about?user=saikat&search=dog'
+}
+(node:70984) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Parsed URL: Url {
+  protocol: null,
+  slashes: null,
+  auth: null,
+  host: null,
+  port: null,
+  hostname: null,
+  hash: null,
+  search: '?user=saikat&search=dog',
+  query: [Object: null prototype] { user: 'saikat', search: 'dog' },
+  pathname: '/about',
+  path: '/about?user=saikat&search=dog',
+  href: '/about?user=saikat&search=dog'
+}
+
+----------------End Terminal--------------------------------
+/*
+Note: Enhanced HTTP Server with URL Parsing and Query Parameters
+
+- The 'url' module is imported to parse incoming request URLs.
+- When a request is received, the URL is parsed using url.parse(req.url, true), which breaks the URL into its components (pathname, query, etc.).
+- The parsed URL object is logged to the console for debugging.
+- The server uses parsedUrl.pathname to determine which route was requested.
+- For the '/about' route, query parameters are accessed via parsedUrl.query.
+    - If a 'user' parameter is present in the query string, it is used to personalize the response; otherwise, 'Guest' is used.
+    - If a 'search' parameter is present, it is displayed; otherwise, an empty string is shown.
+- All requests are logged asynchronously to 'log.txt'.
+- This approach demonstrates how to handle dynamic routes and query parameters in a basic Node.js HTTP server without external frameworks.
+*/

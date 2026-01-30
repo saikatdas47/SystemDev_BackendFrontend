@@ -1,0 +1,24 @@
+REST API -json
+
+This file outlines the API endpoint conventions for user-related data retrieval.
+`GET /users`: Intended to serve an HTML document listing all users. This route is typically accessed via web browsers and is not suitable for mobile applications or frontend frameworks like React or Flutter, as it returns a rendered HTML page.
+`GET /api/users`: This endpoint follows best practices by using the `/api` prefix, indicating that it is an API route. It returns raw user data in JSON format, making it suitable for consumption by mobile apps, frontend frameworks, or any client expecting structured data. Using the `/api` prefix helps distinguish API responses from standard HTML documents.
+ Note: Using `/api` for API endpoints is a good practice as it clearly separates API routes from regular web page routes, ensuring clarity and maintainability in the application's routing structure.
+
+https://youtu.be/uNCrMvkPUAE?si=rbosE_buQxVWDwjH  8:40 
+
+
+
+GET/api/users/1 -get the user with id 1
+GET/api/users/2 - get the user witg id 2
+dynamic path variable
+GET/api/users/:id
+:id-> variable
+
+POST/api/users -create new user
+
+PATCH/api/users/1 -edit the user id 1
+
+DELETE/api/users/1 -delete the user id 1
+
+DATA From: https://mockaroo.com give fake data for testing purpose

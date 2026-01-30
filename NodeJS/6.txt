@@ -1,0 +1,259 @@
+atwkkon model route sob code akta index.js e liksi akhon 3 ta alada folder e jabee
+model view controller nam easier
+model view controller routes 
+
+bar bar restart na korar jonnno 
+npm i nodeman
+start='nodeman index.js'
+
+
+server-side rendering mane hocche server theke HTML generate kore client e pathano. Ejonno template engine use kora hoy, jemon EJS, Pug, ba Handlebars.
+
+Example (Express + EJS):
+
+1. Install EJS:
+npm install ejs
+
+2. index.js e add koren:
+const express = require('express');
+const app = express();
+
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Home Page' });
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+3. views folder e index.ejs file banan:
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <h1>Welcome to <%= title %></h1>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+//Authentication https://youtu.be/OWeruyqhiTo?si=c7RYNp_LMjyuKfae
+/*
+ Authentication is the process of verifying the identity of a user or system.
+ It ensures that the entity requesting access is who it claims to be, typically
+ through credentials such as usernames, passwords, tokens, or biometric data.
+ Authentication is a fundamental security mechanism in software applications.
+
+Authentication can be stateful or stateless:
+
+1. Stateful Authentication:
+- The server keeps track of user sessions (usually with session IDs stored in cookies).
+- When a user logs in, the server creates a session and stores it (in memory, database, etc.).
+- Each request from the client includes the session ID, and the server checks it to authenticate the user.
+- Example: Express-session middleware.
+
+2. Stateless Authentication:
+- The server does not store any session data.
+- Authentication info (like JWT token) is sent with every request (usually in headers).
+- The server verifies the token on each request, but does not keep any session state.
+- Example: JSON Web Tokens (JWT).
+
+Summary:
+- Stateful: Server stores session, good for traditional web apps.
+- Stateless: No server-side session, scalable, good for APIs and microservices.
+
+Authentication Process:
+1. User submits credentials (username/password) to the server.
+2. Server verifies credentials:
+    - If valid, server authenticates the user.
+    - If using stateful auth, server creates a session and sends a session ID (often in a cookie) to the client.
+    - If using stateless auth, server generates a token (like JWT) and sends it to the client (often in a response header or body).
+
+Cookies:
+- Cookies are small pieces of data stored on the client by the browser.
+- Servers use cookies to store session IDs or tokens for authentication.
+- Cookies are automatically sent by the browser with every request to the server for the same domain.
+
+Response & Headers:
+- After successful authentication, the server sends a response to the client.
+- Authentication info (session ID or token) is often sent in the response header (e.g., 'Set-Cookie' for sessions, or custom header for JWT).
+- On subsequent requests, the client includes the authentication info in request headers (e.g., 'Cookie' header or 'Authorization' header).
+
+Why use cookies and headers:
+- Cookies are convenient for browser-based apps because they are managed automatically.
+- Headers (like 'Authorization') are flexible and commonly used for APIs and mobile apps.
+- Both methods allow the server to identify and authenticate users on each request.
+*/
+
+
+/*
+Using `uuid` for Session IDs in Authentication (Stateful Auth):
+
+1. Install uuid:
+npm install uuid
+
+2. How it works:
+- When a user logs in with valid credentials, the server generates a unique session ID using `uuid`.
+- This session ID is stored on the server (in memory, database, or session store) along with user info.
+- The session ID is sent to the client as a cookie (using the 'Set-Cookie' header).
+- On each subsequent request, the browser automatically sends the session ID cookie.
+- The server checks the session ID from the cookie, finds the session, and authenticates the user.
+
+Example (Express, uuid, cookie-parser):
+
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const { v4: uuidv4 } = require('uuid');
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+const sessions = {}; // In-memory session store
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    // Validate credentials (pseudo code)
+    if (username === 'admin' && password === 'password') {
+        const sessionId = uuidv4();
+        sessions[sessionId] = { username };
+        res.cookie('sessionId', sessionId, { httpOnly: true });
+        res.send('Logged in!');
+    } else {
+        res.status(401).send('Invalid credentials');
+    }
+});
+
+app.get('/dashboard', (req, res) => {
+    const sessionId = req.cookies.sessionId;
+    if (sessionId && sessions[sessionId]) {
+        res.send(`Welcome, ${sessions[sessionId].username}`);
+    } else {
+        res.status(401).send('Unauthorized');
+    }
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+Summary:
+- uuid generates a unique session ID for each user session.
+- Session ID is stored server-side and sent to client as a cookie.
+- Client sends session ID cookie with each request.
+- Server uses session ID to authenticate user.
+- This is stateful authentication using uuid for unique session IDs.
+*/
+
+/*
+About cookie-parser:
+
+- `cookie-parser` is a middleware for Express that parses cookies attached to the client request object.
+- It makes cookies available as `req.cookies` (for regular cookies) and `req.signedCookies` (for signed cookies).
+- This is useful for reading authentication tokens, session IDs, or any data stored in cookies.
+
+
+- To set a cookie, use `res.cookie('name', 'value')`.
+- To read cookies, use `req.cookies.name`.
+- For signed cookies, pass a secret to `cookieParser('your_secret')` and use `res.cookie('name', 'value', { signed: true })`.
+*/
+
+/*
+Stateless Authentication with JWT (Token-based):
+
+- In stateless authentication, the server does not store session data.
+- Instead, it issues a signed token (like JWT) to the client after successful login.
+- The client sends this token with each request (usually in the Authorization header).
+- The server verifies the token signature and payload to authenticate the user.
+
+Example (Express + jsonwebtoken):
+
+1. Install dependencies:
+npm install jsonwebtoken
+
+2. Usage:
+
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+app.use(express.json());
+
+const SECRET_KEY = 'your_secret_key';
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    // Validate credentials (pseudo code)
+    if (username === 'admin' && password === 'password') {
+        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
+        res.json({ token });
+    } else {
+        res.status(401).send('Invalid credentials');
+    }
+});
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+}
+
+app.get('/dashboard', authenticateToken, (req, res) => {
+    res.send(`Welcome, ${req.user.username}`);
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+Summary:
+- Server issues a JWT token after login.
+- Client stores the token (in memory, localStorage, etc.).
+- Client sends token in Authorization header: 'Bearer <token>'.
+- Server verifies token on each request (no session storage needed).
+- This is stateless authentication.
+*/
+
+cookie vs Response & Headers  -> https://youtu.be/kMErso06vHo?si=9Oyrn3kqDE8Jlblq
+
+
+
+15 Authorization ta cookie use na kore responce header bearer use korsi.
+jate mobile application e kaje dei. 
+
+In production, the choice depends on your application type:
+
+- For traditional web applications (browser-based), cookies are commonly used for authentication (sessions, etc.) because browsers handle cookies automatically.
+- For APIs, mobile apps, and single-page applications (SPA), authentication tokens (like JWT) are usually sent in the Authorization header (e.g., Bearer token) for better security and flexibility.
+
+Summary:
+- Web apps: Cookies (often with httpOnly, secure flags).
+- APIs/mobile apps: Authorization header (Bearer token).
+
+
+
+Important Rule (Don’t forget this)
+For response/header auth:
+Action          Who does it
+Store token       Client
+Send token        Client
+Remove token      Client
+Verify token      Server
+Server cannot log out user, only client can.

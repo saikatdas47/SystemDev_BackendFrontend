@@ -1,0 +1,18 @@
+# Authorization vs Authentication
+
+## Authentication
+- The process of verifying the identity of a user or system.
+- Answers the question: "Who are you?"
+- Example: Logging in with a username and password.
+
+## Authorization
+- The process of determining what an authenticated user is allowed to do.
+- Answers the question: "What are you allowed to do?"
+- Example: Checking if a logged-in user has permission to access an admin page.
+
+## Key Differences
+- Authentication comes before authorization.
+- Authentication = identity verification.
+- Authorization = permission validation.
+
+

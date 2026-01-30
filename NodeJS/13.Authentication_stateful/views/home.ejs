@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex justify-center items-start py-10">
+
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-8">
+
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+            URL Shortener
+        </h1>
+
+        <!-- Form -->
+        <form method="POST" action="/url" class="flex gap-4 mb-6">
+            <input
+                type="text"
+                name="originalUrl"
+                placeholder="Enter your URL"
+                required
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+                type="submit"
+                class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            >
+                Shorten
+            </button>
+        </form>
+
+        <!-- Generated Short URL -->
+        <% if (locals.shortUrl) { %>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 flex items-center justify-between">
+                <p class="text-green-800">
+                    Short URL:
+                    <a
+                        href="http://localhost:3000/url/<%= locals.shortUrl %>"
+                        target="_blank"
+                        class="font-semibold underline"
+                    >
+                        http://localhost:3000/url/<%= locals.shortUrl %>
+                    </a>
+                </p>
+                <button
+                    onclick="navigator.clipboard.writeText('http://localhost:3000/url/<%= locals.shortUrl %>')"
+                    class="px-4 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                >
+                    Copy
+                </button>
+            </div>
+        <% } %>
+
+        <!-- URL Table -->
+        <% if (locals.urls && urls.length > 0) { %>
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Short URL</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Original URL</th>
+                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Visits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% urls.forEach(url => { %>
+                            <tr class="border-t hover:bg-gray-50">
+                                <td class="px-4 py-3 text-blue-600 font-medium">
+                                    <a
+                                        href="http://localhost:3000/url/<%= url.shortUrl %>"
+                                        target="_blank"
+                                        class="hover:underline"
+                                    >
+                                        <%= url.shortUrl %>
+                                    </a>
+                                </td>
+                                <td class="px-4 py-3 text-gray-700 break-all">
+                                    <%= url.originalUrl %>
+                                </td>
+                                <td class="px-4 py-3 text-center font-semibold text-gray-800">
+                                    <%= url.visitHistory.length %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+
+    </div>
+
+</body>
+</html>

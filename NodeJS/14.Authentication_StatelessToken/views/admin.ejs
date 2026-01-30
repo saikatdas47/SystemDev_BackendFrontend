@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex justify-center items-start py-10">
+
+  <div class="w-full max-w-6xl bg-white shadow-lg rounded-xl p-8">
+
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+      Admin Dashboard
+    </h1>
+
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-200 rounded-lg overflow-hidden">
+        
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Short URL</th>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Original URL</th>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Created By</th>
+            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Visits</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% urls.forEach(url => { %>
+            <tr class="border-t hover:bg-gray-50 transition">
+              <td class="px-4 py-3 text-xs text-gray-500 font-mono break-all">
+                <%= url._id %>
+              </td>
+
+              <td class="px-4 py-3 text-blue-600 font-medium">
+                <a
+                  href="http://localhost:3000/url/<%= url.shortUrl %>"
+                  target="_blank"
+                  class="hover:underline"
+                >
+                  <%= url.shortUrl %>
+                </a>
+              </td>
+
+              <td class="px-4 py-3 text-gray-700 break-all">
+                <%= url.originalUrl %>
+              </td>
+
+              <td class="px-4 py-3 text-sm text-gray-700">
+                <%= url.createdBy%>
+              </td>
+
+              <td class="px-4 py-3 text-center font-semibold text-gray-800">
+                <%= url.visitHistory.length %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</body>
+</html>
