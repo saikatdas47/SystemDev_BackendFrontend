@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head') %>
+        <title>
+            <%= title %>
+        </title>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <%- include('./partials/navbar') %>
+
+        <div class="max-w-5xl mx-auto px-4 mt-8 bg-white rounded-xl shadow">
+
+            <!-- Header -->
+            <div class="p-6 flex items-center justify-between border-b">
+                <div class="flex items-center gap-4">
+                    <img src="<%= post.createdBy.profilePicUrl || '/images/userAvatar.png' %>"
+                        class="w-12 h-12 rounded-full object-cover" />
+                    <div>
+                        <p class="font-semibold text-lg">
+                            <%= post.createdBy.username %>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            <%= new Date(post.createdAt).toLocaleString() %>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- POST DELETE BUTTON (Only Owner) -->
+                <% if (user && post.createdBy._id.toString()===user.id) { %>
+                    <form action="/blog/delete/<%= post._id %>" method="POST"
+                        onsubmit="return confirm('Delete this post?');">
+                        <button type="submit" class="text-red-500 text-sm font-semibold hover:text-red-700">
+                            Delete Post
+                        </button>
+                    </form>
+                    <% } %>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+                <h1 class="text-3xl font-bold mb-4">
+                    <%= post.title %>
+                </h1>
+
+                <p class="text-gray-700 whitespace-pre-line text-lg mb-6">
+                    <%= post.content %>
+                </p>
+
+                <% if (post.imgUrl) { %>
+                    <div class="w-full flex justify-center bg-black rounded-lg mb-6">
+                        <img src="<%= post.imgUrl %>" class="max-h-[80vh] object-contain" />
+                    </div>
+                    <% } %>
+            </div>
+
+            <!-- COMMENT SECTION -->
+            <div class="border-t px-6 py-5">
+
+                <% if (user) { %>
+                    <form action="/blog/comment/<%= post._id %>" method="POST" class="space-y-3">
+                        <textarea name="content" rows="3" required placeholder="Write a comment..." class="w-full px-4 py-2 border rounded-lg resize-none
+                               focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg
+                                   hover:bg-blue-700 transition">
+                                Comment
+                            </button>
+                        </div>
+                    </form>
+                    <% } else { %>
+                        <p class="text-center text-gray-500">
+                            <a href="/user/signin" class="text-blue-600 hover:underline">
+                                Login
+                            </a>
+                            to write a comment.
+                        </p>
+                        <% } %>
+
+            </div>
+            <!-- COMMENTS LIST -->
+            <div class="mt-2 space-y-4 py-4">
+
+                <% if (comments.length===0) { %>
+                    <p class="text-gray-500 text-sm text-center">
+                        No comments yet.
+                    </p>
+                    <% } %>
+
+                        <span class="text-sm font-semibold text-gray-700">Comments (<%= comments.length %>)</span>
+
+                        <% comments.forEach(comment=> { %>
+                            <div class="flex gap-3 mb-2">
+                                <img src="<%= comment.createdBy.profilePicUrl || '/images/userAvatar.png' %>"
+                                    class="w-9 h-9 rounded-full object-cover" />
+
+                                <div class="bg-gray-100 px-4 py-2 rounded-lg w-full relative">
+                                    <p class="font-semibold text-sm">
+                                        <%= comment.createdBy.username %>
+                                    </p>
+                                    <p class="text-gray-700 text-sm whitespace-pre-line">
+                                        <%= comment.content %>
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        <%= new Date(comment.createdAt).toLocaleString() %>
+                                    </p>
+
+                                    <!-- DELETE BUTTON -->
+                                    <% if (user && (comment.createdBy._id.toString()===user.id ||
+                                        post.createdBy._id.toString()===user.id)) { %>
+                                        <form action="/blog/comment/delete/<%= comment._id %>" method="POST"
+                                            class="absolute top-2 right-2"
+                                            onsubmit="return confirm('Delete this comment?');">
+                                            <button type="submit"
+                                                class="text-red-500 text-xs font-semibold hover:text-red-700">
+                                                Delete
+                                            </button>
+                                        </form>
+                                        <% } %>
+                                </div>
+                            </div>
+                            <% }) %>
+            </div>
+
+
+
+
+
+        </div>
+
+        <%- include('./partials/script') %>
+</body>
+
+</html>

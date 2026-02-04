@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head') %>
+        <title>
+            <%= title %>
+        </title>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <%- include('./partials/navbar') %>
+        <div class="max-w-6xl mx-auto px-4 mt-6
+            grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <% if (posts.length===0) { %>
+                <div class="col-span-full bg-white p-4 rounded-xl shadow text-gray-500 text-center">
+                    No posts yet.
+                </div>
+                <% } %>
+
+                    <% posts.forEach(post=> { %>
+                        <a href="/blog/<%= post._id %>" class="block">
+                            <div class="bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer
+                        w-full h-[380px] flex flex-col overflow-hidden">
+
+                                <!-- Header -->
+                                <div class="p-3 flex items-center justify-between border-b">
+                                    <div class="flex items-center gap-2">
+                                        <img src="<%= post.createdBy.profilePicUrl || '/images/userAvatar.png' %>"
+                                            class="w-9 h-9 rounded-full object-cover" />
+                                        <div>
+                                            <p class="font-semibold text-sm">
+                                                <%= post.createdBy.username %>
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                <%= new Date(post.createdAt).toLocaleDateString() %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <% if (user && post.createdBy._id.toString()===user.id) { %>
+                                        <form action="/blog/delete/<%= post._id %>" method="POST"
+                                            onclick="event.stopPropagation()"
+                                            onsubmit="return confirm('Delete this post?');">
+                                            <button class="text-red-500 text-xs font-semibold">
+                                                Delete
+                                            </button>
+                                        </form>
+                                        <% } %>
+                                </div>
+
+                                <!-- Body -->
+                                <div class="p-3 flex-1 overflow-hidden">
+                                    <h3 class="text-base font-semibold mb-1 truncate">
+                                        <%= post.title %>
+                                    </h3>
+
+                                    <p class="text-sm text-gray-700 line-clamp-3">
+                                        <%= post.content %>
+                                    </p>
+                                </div>
+
+                                <!-- Image -->
+                                <% if (post.imgUrl) { %>
+                                    <img src="<%= post.imgUrl %>" class="h-36 w-full object-cover" />
+                                    <% } %>
+                            </div>
+                        </a>
+                        <% }) %>
+        </div>
+        <%- include('./partials/script') %>
+</body>
+
+</html>

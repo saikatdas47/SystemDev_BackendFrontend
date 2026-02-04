@@ -235,9 +235,6 @@ cookie vs Response & Headers  -> https://youtu.be/kMErso06vHo?si=9Oyrn3kqDE8Jlbl
 
 
 
-15 Authorization ta cookie use na kore responce header bearer use korsi.
-jate mobile application e kaje dei. 
-
 In production, the choice depends on your application type:
 
 - For traditional web applications (browser-based), cookies are commonly used for authentication (sessions, etc.) because browsers handle cookies automatically.
