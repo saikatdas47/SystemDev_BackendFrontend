@@ -1,0 +1,171 @@
+Cluster in Node.js is a built-in module that lets you run multiple inWhat is cluster? https://youtu.be/JoPZ9gEvpz8?si=yOh-WbWcUXJU6_KP
+Cluster is a Node.js built-in module that lets you run multiple Node.js processes (workers) on one machine.
+
+Why cluster is needed?
+Node.js runs on one CPU core by default.
+Cluster helps use all CPU cores.
+
+How it works?
+	•	Master process: controls workers
+	•	Worker processes: handle requests
+	•	All workers share same port
+
+Why we use cluster?
+	•	Faster performance 
+	•	Handle more users
+	•	Use multi-core CPU
+	•	App keeps running if a worker crashes
+
+How many workers?
+	•	Usually = number of CPU cores
+	•	Use os.cpus().length
+
+When to use cluster?
+	•	High traffic apps
+	•	Production servers
+	•	CPU-heavy work
+
+When NOT to use cluster?
+	•	Small apps
+	•	Low traffic
+	•	Serverless (Vercel, Netlify)
+
+Cluster vs PM2
+	•	Cluster: Node.js built-in
+	•	PM2: Tool that manages cluster + restart + logs
+
+Important note
+Workers do NOT share memory.
+Use Redis / DB for shared data.
+
+Simple flow
+Request → Master → Worker → Response
+
+
+
+
+
+
+
+First thing: https://youtu.be/b_B1BEShfBc?si=SXPbRzsnyeuMVN1k
+Nginx does not use the word “cluster” officially.
+But people say “Nginx cluster” to mean multiple worker processes + multiple servers.
+Nginx Worker Processes
+
+1️⃣ What is it? Nginx runs one master process and many worker processes.
+
+Why? To use all CPU cores and handle many requests at once.
+
+How many workers? Usually: worker_processes auto; This means one worker per CPU core.
+
+
+2️⃣ Load Balancing (Real “Cluster” idea)
+What is it? One Nginx distributes traffic to many backend servers.
+
+Why we use it?
+	•	Handle more users
+	•	High availability
+	•	If one server is down, others work
+Common methods:
+	•	round-robin (default)
+	•	least_conn
+	•	ip_hash
+
+3️⃣ High Availability (HA)
+What is it? Multiple Nginx servers working together.
+How?
+	•	Load balancer in front
+	•	Keepalived / cloud LB
+	•	If one Nginx dies → another takes over
+
+    Main jobs of Nginx:
+	•	Serve static files (HTML, CSS, images)
+	•	Send requests to backend (Node.js, PHP, etc.)  
+	•	Load balance traffic
+	•	Improve speed and performance
+	•	Protect backend from heavy 
+
+
+->What Nginx Do?
+
+Reverse Proxy
+Nginx receives requests and forwards them to your app.
+	•	Node.js
+	•	PHP
+	•	Python
+Why?
+	•	Backend stays hidden
+	•	Better security
+	•	Easier scaling
+
+Load Balancer
+Nginx can send traffic to multiple servers.
+	•	Server A
+	•	Server B
+	•	Server C
+
+Why?
+	•	Handle more users
+	•	No single server overload
+	•	High availability
+
+Performance Booster
+Nginx is event-driven (non-blocking).
+	•	Handles thousands of users
+	•	Uses less memory
+Extra features:
+	•	Gzip compression
+	•	Caching
+	•	HTTP/2, HTTPS
+
+Security Layer
+Nginx helps protect your app.
+	•	SSL / HTTPS
+	•	Rate limiting
+	•	Block bad requests
+API Gateway (basic)
+
+For APIs, Nginx can:
+	•	Route APIs
+	•	Add headers
+	•	Limit requests
+
+Real-life example
+
+You open facebook.com
+Nginx:
+	1.	Accepts request
+	2.	Serves images
+	3.	Sends API calls to backend
+	4.	Balances traffic
+
+Why Nginx is used in production
+	•	Fast ⚡
+	•	Stable
+	•	Scales well
+	•	Works with any backend
+    
+
+4️⃣ Nginx vs Node.js Cluster
+Topic               Nginx           Node.js
+Purpose             Handle traffic  Run JS app
+Uses CPU cores      Yes             Yes
+Load balance        Yes (built-in)  No
+Memory shared       No              No
+
+5️⃣ When to use Nginx “Cluster”?
+Use it when:
+	•	High traffic website
+	•	Multiple backend servers
+	•	Need stability + speed
+
+Do NOT worry about it when:
+	•	Small app
+	•	Local development
+
+Simple flow :   User → Nginx → Backend servers → Response
+
+Key takeaway
+	•	Nginx uses worker processes
+	•	“Cluster” = load balancing + multiple servers
+	•	Very fast and production-ready 

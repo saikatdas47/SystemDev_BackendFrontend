@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+
+<body>
+    <h1>Welcome to the Chat App</h1>
+
+
+
+    <input type="text" placeholder="Enter your message here" id="messageInput">
+    <button id="sendButton">Send Message</button>
+
+    <p id="messages"></p>
+
+
+    <script src="/socket.io/socket.io.js"></script> <!-- socket.io client library ke include kora hocche -->
+    <script>
+
+
+        const socket = io(); // socket.io client ke initialize kora hocche, eta automatically server er sathe connect hoye jabe.
+        const sendbtn = document.getElementById('sendButton');
+
+
+        sendbtn.addEventListener('click', () => {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            //console.log(message);
+            socket.emit('chatMessage', message); // socket.emit diye amra server e ekta event pathacchi, ekhane 'chat message' holo event er naam, ar message holo data jeita server e pathano hocche.
+        });
+
+        socket.on('backmsg', (message) => { // socket.on diye amra server theke 'chatMessage' event receive korte pari, ar message parameter e oi event er data pabo.
+            const messages = document.getElementById('messages');
+            messages.innerHTML += `<p>${message}</p>`; // jokhon server theke message receive hobe tokhon oi message ta webpage e dekhabe.
+        });
+
+    </script>
+</body>
+
+</html>
